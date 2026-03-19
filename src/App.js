@@ -1,55 +1,36 @@
 import "./App.css";
 import Confetti from "./Confetti";
-
-const shareMessage = "I just ran my first container using Docker";
-const shareLink = "https://docker.com/";
+import { useEffect, useState } from "react";
 
 const App = () => {
+  const [usuarios, setUsuarios] = useState([]);
+
+  // 🔌 Llamada al microservicio
+  useEffect(() => {
+    fetch("http://localhost:3001/usuarios")
+      .then((res) => res.json())
+      .then((data) => setUsuarios(data))
+      .catch((err) => console.error("Error:", err));
+  }, []);
+
   return (
     <div className="App">
       <Confetti />
+
       <header className="App-header">
-        <h1 style={{ marginBottom: "0px" }}>Congratulations!!!</h1>
-        <p style={{ marginTop: "10px", marginBottom: "50px" }}>
-          You ran your first container.
-        </p>
-        <div>
-          <a
-            target="_blank"
-            href={
-              "https://twitter.com/intent/tweet?text=" +
-              shareMessage +
-              "&url=" +
-              shareLink
-            }
-            class="fa-brands fa-x-twitter"
-            rel="noopener noreferrer"
-          >
-            {" "}
-          </a>
-          <a
-            target="_blank"
-            href={
-              "https://www.linkedin.com/sharing/share-offsite/?url=" + shareLink
-            }
-            class="fa-brands fa-linkedin"
-            rel="noopener noreferrer"
-          >
-            {" "}
-          </a>
-          <a
-            target="_blank"
-            href={
-              "https://reddit.com/submit?title=" +
-              shareMessage +
-              "&url=" +
-              shareLink
-            }
-            class="fa-brands fa-reddit"
-            rel="noopener noreferrer"
-          >
-            {" "}
-          </a>
+        <h1>Usuarios 🚀</h1>
+
+        {/* 📋 Lista de usuarios */}
+        <div style={{ marginTop: "20px" }}>
+          {usuarios.length === 0 ? (
+            <p>Cargando usuarios...</p>
+          ) : (
+            usuarios.map((user) => (
+              <div key={user.id} style={{ marginBottom: "10px" }}>
+                <strong>{user.nombre}</strong> - {user.email}
+              </div>
+            ))
+          )}
         </div>
       </header>
     </div>

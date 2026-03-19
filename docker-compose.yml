@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend_api
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: mi_db
+
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
